@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}View All Accounts{% endblock %}
+{% block body %}
+{% for i in accounts %}
+<div class="account">
+    <p>
+        {{ i.name }}<br>
+        {{ i.balance }} <br>
+        <a href="{% url 'show_account' i.id %}">Details</a>
+    </p>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

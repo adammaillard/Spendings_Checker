@@ -80,3 +80,11 @@ input[type=submit]:hover, select:hover {
     text-align: center;
 }
 
+.account{
+    padding: 14px;
+}
+
+.account * {
+    text-align: center;
+}
+

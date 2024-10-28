@@ -82,14 +82,14 @@ def transaction_list(request):
     
     context["transactions"] = Transaction.objects.filter(name__contains=search).filter(date__gte=after).filter(date__lte=before)
 
-    return render(request, "list_view.html", context)
+    return render(request, "transactions_list_view.html", context)
 
 def show_transaction(request, id):
     context = {}
 
     context["transaction"] = Transaction.objects.get(id=id)
 
-    return render(request, "view_one.html", context)
+    return render(request, "view_transaction.html", context)
 
 def update_transaction(request, id):
     context = {}
@@ -105,4 +105,18 @@ def update_transaction(request, id):
     context["form"] = form
 
     return render(request, "update.html", context)
+
+def accounts_list(request):
+    context = {}
+    
+    context["accounts"] = Account.objects.all()
+
+    return render(request, "accounts_list_view.html", context)
+
+def show_account(request, id):
+    context = {}
+
+    context["account"] = Account.objects.get(id=id)
+
+    return render(request, "view_account.html", context)
     
