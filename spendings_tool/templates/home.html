@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<a href="{% url 'transaction_list' %}">Show Transactions</a>
+<a href="{% url 'import_data' %}">Import Data</a>
+{% endblock %}

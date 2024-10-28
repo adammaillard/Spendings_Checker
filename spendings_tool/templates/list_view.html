@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}View All Transactions{% endblock %}
+{% block body %}
+<form action="{% url 'transaction_list' %}">
+    <input type="text" name="search" placeholder="Search..">
+    <input type="date" name="after" placeholder="1-1-1">
+    <input type="date" name="before">
+    <button type="submit">Submit</button>
+</form>
+{% for i in transactions %}
+<div class="transaction">
+    <p>
+        {{ i.name }}<br>
+        {{ i.amount }} <br>
+        <a href="{% url 'show_transaction' i.id %}">Details</a>
+    </p>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

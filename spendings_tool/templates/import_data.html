@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Import{% endblock %}
+{% block body %}
+<form action="{% url 'process_data' file_name %}" method="POST" enctype="multipart/form-data">
+{% csrf_token%}
+{% for i in fields %}
+    <label for="{{i}}">{{i}}</label>
+    <select name="{{i}}">
+    {% for i in headers %}
+        <option value="{{forloop.counter0}}">{{i}}</option>
+    {% endfor %}
+    <option value="S">Skip</option>
+    </select><br>
+{% endfor %}
+<input type="submit" value="Submit">
+</form>
+{% endblock %}

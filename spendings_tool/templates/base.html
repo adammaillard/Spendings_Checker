@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title%}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'transaction_list' %}">Transactions</a></li>
+            <li><a href="{% url 'import_data' %}">Import</a></li>
+        </ul>
+    </nav>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>

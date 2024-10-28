@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}View One Transaction{% endblock %}
+{% block body %}
+{{transaction.name}}<br>
+{{transaction.amount}}<br>
+{{transaction.date}}<br>
+Account:<br>
+{{transaction.account.name}}<br>
+<a href="{% url 'update_transaction' transaction.id %}">Edit Transaction</a>
+<a href="{% url 'transaction_list' %}">View All</a>
+{% endblock %}
