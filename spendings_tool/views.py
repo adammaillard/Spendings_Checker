@@ -8,12 +8,20 @@ from django.core.files.storage import default_storage
 def home(request):
     return render(request, "home.html")
 
+#Allows user to import transactions using csv files
 def import_data(request):
     context = {}
+
+    # Allow user to post csv file if request is GET
     if request.method == "GET":
         return render(request, "upload_csv.html")
+    
+    # If user POSTs a csv file break down the file into headers and send user import_data.html to allow them to pick 
+    # which collums of the csv are what transaction attributes
     if request.method == "POST":
+
         csv_file = request.FILES["csv_file"]
+
         if not csv_file.name.endswith('.csv'):
             messages.error(request,'File is not CSV type')
             return redirect(reverse("import_data"))
@@ -21,19 +29,25 @@ def import_data(request):
         default_storage.delete("files/" + csv_file.name)
         default_storage.save("files/" + csv_file.name, csv_file)
         context["file_name"] = csv_file.name.removesuffix('.csv')
+
         file_data = default_storage.open("files/" + csv_file.name).read().decode("utf-8")
         lines = file_data.split("\n")
         headers = lines[0].split(",")
         context["headers"] = headers
+
         fields = [f.name for f in Transaction._meta.get_fields()]
         fields.append("amount_negative")
         context["fields"] = fields
 
         return render(request, "import_data.html", context)
 
+# Follow up method to import_data()
+# When the user inputs which collum is what field try to create transactions using the csv file
 def process_data(request, file_name):
     file_data = default_storage.open("files/" + file_name + ".csv").read().decode("utf-8")
     lines = file_data.split("\n")
+    lines.pop(0)
+
     post = request.POST
     postArr = [post.get("id"),
                post.get("account"),
@@ -42,8 +56,7 @@ def process_data(request, file_name):
                post.get("amount"),
                post.get("category"),
                post.get("amount_negative")]
-    lines.pop(0)
-    arr = []
+   
     for line in lines:
         if line != '':
             fields = line.split(",")
@@ -69,9 +82,13 @@ def process_data(request, file_name):
                     messages.error(request, form.errors.as_json())
             except Exception as e:
                 messages.error(request, repr(e))
+
     return redirect(reverse("import_data"))
 
+# Returns a list of all transactions
+# Allows for filtering of transactions using search and dates
 def transaction_list(request):
+
     context = {}
 
     search = request.GET.get("search", "")
@@ -84,14 +101,18 @@ def transaction_list(request):
 
     return render(request, "transactions_list_view.html", context)
 
+# Returns a single transaction
 def show_transaction(request, id):
+
     context = {}
 
     context["transaction"] = Transaction.objects.get(id=id)
 
     return render(request, "view_transaction.html", context)
 
+# Allows the user to update a transaction
 def update_transaction(request, id):
+
     context = {}
 
     transaction = get_object_or_404(Transaction, id=id)
@@ -106,14 +127,18 @@ def update_transaction(request, id):
 
     return render(request, "update.html", context)
 
+# Returns a list of all accounts
 def accounts_list(request):
+
     context = {}
     
     context["accounts"] = Account.objects.all()
 
     return render(request, "accounts_list_view.html", context)
 
+# Returns an account from an id
 def show_account(request, id):
+
     context = {}
 
     context["account"] = Account.objects.get(id=id)

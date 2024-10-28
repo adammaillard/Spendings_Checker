@@ -2,10 +2,8 @@
 {% block title %}Import{% endblock %}
 {% block body %}
 <form method="POST" enctype="multipart/form-data">
-    <!--Security token -->
     {% csrf_token%}
-    
-    <!--Using the formset-->
+
     <input type="file" name="csv_file" required="True"><br>
     {% for i in messages%}
     {{i}}<br>
