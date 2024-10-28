@@ -24,7 +24,7 @@ Open terminal at main folder location.
 For the first time run:<br>
 <code> python3 manage.py migrate </code>
 
-To start up the server run:
+To start up the server run:<br>
 <code> python3 manage.py runserver </code>
 
 The webapp can then be accessed from 127.0.0.1:8000 or localhost:8000
