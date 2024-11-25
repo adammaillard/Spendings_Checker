@@ -6,7 +6,26 @@ from django.contrib import messages
 from django.core.files.storage import default_storage
 
 def home(request):
-    return render(request, "home.html")
+    context = {}
+
+    accounts = Account.objects.all()
+    
+    total = 0
+    for i in accounts:
+        total += i.balance
+    context["total"] = total
+
+    def get_transactions_amount(account):
+        spendings = 0
+        transactions = Transaction.objects.filter(account=account.id)
+        for i in transactions:
+            spendings += i.amount
+        return spendings
+    
+    spendings = map(get_transactions_amount, accounts)
+    context["accounts"] = zip(accounts, spendings)
+
+    return render(request, "home.html", context)
 
 #Allows user to import transactions using csv files
 def import_data(request):

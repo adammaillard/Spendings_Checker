@@ -3,4 +3,27 @@
 {% block body %}
 <a href="{% url 'transaction_list' %}">Show Transactions</a>
 <a href="{% url 'import_data' %}">Import Data</a>
+<div class="summary">
+    <table>
+        <tr>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td>{{total}}</td>
+        </tr>
+    </table>
+    {% for i,s in accounts %}
+    <table>
+        <tr>
+            <th>{{i.name}}</th>
+        </tr>
+        <tr>
+            <td>{{i.balance}}</td>
+        </tr>
+        <tr>
+            <td>{{s}}</td>
+        </tr>
+    </table>
+    {% endfor %}
+</div>
 {% endblock %}
