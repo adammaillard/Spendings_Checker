@@ -4,13 +4,13 @@
 }
 
 body {
-    font-family:"Noto Sans", sans-serif;
+    font-family:"Roboto", sans-serif;
     background-color: #f3f3f3;
 }
 
 nav {
     background-color: #ffffff;
-    color: #003049;
+    color: black;
     border-bottom: 2px solid #c7c7c7;
 }
 
@@ -18,29 +18,60 @@ nav ul {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 20px;
 }
 
 nav li {
     margin: 0 20px;
     list-style: none;
+    float: left
+}
+
+.right_align {
+    float: right;
 }
 
 nav a {
     text-decoration: none;
     padding: 14px;
-    color: #003049;
+    color: black;
     font-size: 19px;
     font-weight: 400;
 }
 
 nav a:hover{
-    color: #669bbc;
+    color: darkgrey;
+}
+
+table {
+    padding: 10px;
+    color: black;
+    background-color: white;
+    border: 2px solid #c7c7c7;
+    border-radius: 10px;
+    width: 25%;
+}
+
+td {
+    font-size: 16px;
+    padding: 14px;
+    text-align: center;
+}
+
+th {
+    font-size: 16px;
+    padding: 14px;
+    text-align: center;
+    border: 2px solid #c7c7c7;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
 h1 {
     text-align: center;
-    color: #003049;
+    color: black;
     padding: 30px;
 }
 
@@ -58,33 +89,144 @@ label {
 }
 
 input, select {
-    width: 100%;
     border-radius: 4px;
     border: 1px solid #ccc;
     padding: 12px 20px;
-    margin: 8px 0;
+    margin: 8px;
     font-size: 14px;
     box-sizing: border-box;
+    justify-content: center;
+    text-align: center;
+}
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
-input[type=submit]:hover, select:hover {
+button {
+    margin: auto;
+}
+
+button:hover, select:hover, input:hover {
     cursor: pointer;
-    background-color: #d0d0d7;
 }
 
 .transaction{
     padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    margin:auto;
+    border: 1px solid#c7c7c7;
+    border-bottom: 0px;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+}
+
+.transactions {
+    width:50vw;
+    margin: 20px;
 }
 
 .transaction * {
-    text-align: center;
+    text-align: left;
 }
 
-.account{
-    padding: 14px;
+.transaction_name {
+    font-weight: bold;
 }
 
-.account * {
-    text-align: center;
+.transaction_date {
+    font-size: 14px;
+    color: darkgray;
 }
 
+.transactions_body {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.current_balance {
+    font-size: 14px;
+    color: darkgray;
+    text-align: right;
+}
+
+.rounded_rect, .account{
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid#c7c7c7;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    border-radius: 5px;
+    margin-top: 35px;
+}
+
+.account_name, .account_balance {
+    font-weight: bold;
+}
+
+.account_balance, .account_spendings {
+    text-align: right;
+}
+
+.account_spendings, .account_number{
+    font-size: 14px;
+    color: darkgray;
+}
+
+.account_summary {
+    margin: auto;
+    width: 50vw;
+}
+
+#sort {
+    margin: 20px;
+    display: flex;
+}
+
+#sort_options {
+    display: none;
+    width: 0;
+    flex-grow: 1;
+}
+
+#show_menu {
+    display: flex;
+    width: 5vh;
+    height: 5vh;
+    margin: 0px;
+    background-color: white;
+    border: none;
+    margin: 8px 0px 8px 8px;
+    border-radius: 5px;
+    justify-content: center;
+}
+
+.material-symbols-outlined {
+    margin: auto;
+}
+
+#sort_options.show {
+    display: block;
+    width: auto;
+}
+
+.add {
+    margin-top: 0px;
+    margin-bottom: 35px;
+}
+
+.view_one_body {
+    width:75vw;
+    margin: 20px;
+}
+
+.view_one {
+    display: flex;
+    justify-content: center;
+}

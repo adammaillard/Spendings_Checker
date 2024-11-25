@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}View One Account{% endblock %}
 {% block body %}
-{{account.name}}<br>
-{{account.balance}}<br>
-{{account.account_number}}<br>
 <a href="{% url 'account_list' %}">View All</a>
+<div class="account">
+    {{account.name}}
+    {{account.account_number}}
+</div>
 {% endblock %}

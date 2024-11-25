@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}View All Model Mappings{% endblock %}
+{% block body %}
+<ul>
+    {% for message in messages %}
+    <li>{{message}}</li>
+    {% endfor %}
+</ul>
+{% for i in mappings %}
+<div class="mapping">
+    <p>
+        {{ i.name }}<br>
+        {{ i.field }} <br>
+        <a href="{% url 'edit_mapping' i.id %}">Edit Mapping</a>
+    </p>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

@@ -1,29 +1,37 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block body %}
-<a href="{% url 'transaction_list' %}">Show Transactions</a>
-<a href="{% url 'import_data' %}">Import Data</a>
-<div class="summary">
-    <table>
-        <tr>
-            <th>Total</th>
-        </tr>
-        <tr>
-            <td>{{total}}</td>
-        </tr>
-    </table>
-    {% for i,s in accounts %}
-    <table>
-        <tr>
-            <th>{{i.name}}</th>
-        </tr>
-        <tr>
-            <td>{{i.balance}}</td>
-        </tr>
-        <tr>
-            <td>{{s}}</td>
-        </tr>
-    </table>
+<div class="account_summary">
+    <div class="account">
+        <div class="account_name">All</div>
+        <div>
+            <div class="account_balance">
+                Total Balance:
+            </div>
+            <div class="account_spendings">
+                {{total_balance}}
+            </div>
+        </div>
+    </div>
+    {% for account in accounts %}
+    <a class="account" href="{% url "show_account" account.id %}">
+        <div>
+            <div class="account_name">
+                {{account.name}}
+            </div>
+            <div class="account_number">
+                {{account.number}}
+            </div>
+        </div>
+        <div>
+            <div class="account_balance">
+                {{account.balance}}
+            </div>
+            <div class="account_spendings">
+                {{account.spendings}}
+            </div>
+        </div>
+    </a>
     {% endfor %}
 </div>
 {% endblock %}

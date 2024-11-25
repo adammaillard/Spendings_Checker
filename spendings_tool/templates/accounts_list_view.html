@@ -1,14 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}View All Accounts{% endblock %}
 {% block body %}
-{% for i in accounts %}
-<div class="account">
-    <p>
-        {{ i.name }}<br>
-        {{ i.balance }} <br>
-        <a href="{% url 'show_account' i.id %}">Details</a>
-    </p>
-</div>
-<hr>
+<div class="account_summary">
+<a class="rounded_rect" href={% url "create_account"%}>
+    <span class="material-symbols-outlined">add</span>
+</a>
+{% for account in accounts %}
+<a class="account" href="{% url 'show_account' account.id %}">
+    <div>
+        <div class="account_name">
+            {{account.name}}
+        </div>
+        <div class="account_number">
+            {{account.number}}
+        </div>
+    </div>
+    <div>
+        <div class="account_balance">
+            {{account.balance}}
+        </div>
+        <div class="account_spendings">
+            {{account.spendings}}
+        </div>
+    </div>
+</a>
 {% endfor %}
+</div>
 {% endblock %}

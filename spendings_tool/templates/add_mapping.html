@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Add Account Mapping{% endblock %}
+{% block body %}
+<form action="{% url 'add_account_mapping' account_number %}" method="POST" enctype="multipart/form-data">
+{% csrf_token%}
+    <label for="account">Select account corresponding to account number: ({{account_number}})</label>
+    <select name="account">
+        {% for i in accounts %}
+        <option value="{{i.id}}">{{i.name}}</option>
+        {% endfor %}
+    </select><br>
+<input type="submit" value="Submit">
+</form>
+{% endblock %}

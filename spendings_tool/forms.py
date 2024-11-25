@@ -1,5 +1,5 @@
 from django import forms
-from .models import Transaction
+from .models import Transaction, Account, ModelMapping, AccountMapping
 
 class TransactionForm(forms.ModelForm):
     class Meta:
@@ -9,5 +9,26 @@ class TransactionForm(forms.ModelForm):
             "name",
             "amount",
             "account",
-            "date"
+            "balance",
+            "date",
+        ]
+
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+
+        fields = [
+            "name",
+            "account_number",
+            "account_type",
+            "currency",
+        ]
+
+class ModelMappingForm(forms.ModelForm):
+    class Meta:
+        model = ModelMapping
+
+        fields = [
+            "name",
+            "field"
         ]
