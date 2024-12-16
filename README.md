@@ -9,9 +9,6 @@ A simple webapp to add bank transactions to for budgeting or just general info.
   <li>View/Edit singular transaction</li>
   <li>Search for transactions between dates and by description</li>
   <li>View Accounts</h1>
-</ul>
-<h2> Working On </h2>
-<ul>
   <li>Add / Edit Accounts</li>
   <li>Add / Sort Transactions by category</li>
 </ul>
