@@ -8,7 +8,29 @@
     </button>
     <div id="sort_options">
         <div class="search">
-            <input type="text" id="search" placeholder="Search.." oninput="Search()" autocomplete="off">
+            <input type="text" class="search_box" id="search" placeholder="Search.." oninput="Search()" autocomplete="off">
+        </div>
+        <div id="category_sort">
+            <div class="description centered">Sort Category</div>
+            <label class="container">
+                <div class="description_name" id="-">None</div>
+                <input class="check" type="checkbox" onclick="sortCategory()">
+                <span class="material-symbols-outlined checkmark"></span>
+            </label>
+            {% for category in categories %}
+            <label class="container">
+                <div class="description_name" id="{{category.name}}">{{category.name}}</div>
+                <input class="check" type="checkbox" onclick="sortCategory('{{category.name}}')">
+                <span class="material-symbols-outlined checkmark"></span>
+            </label>
+            {% endfor %}
+        </div>
+        <div id="date_sort">
+            <div class="description centered">Sort Date</div>
+            <div class="description">Before</div>
+            <input type="text" class="search_box" id="before_date" placeholder=".. / .. / ...." oninput="DateSearch()" autocomplete="off">
+            <div class="description">After</div>
+            <input type="text" class="search_box" id="after_date" placeholder=".. / .. / ...." oninput="DateSearch()" autocomplete="off">
         </div>
     </div>
 </div>
@@ -16,17 +38,17 @@
     <a class="rounded_rect add" href={% url "create_transaction"%}>
         <span class="material-symbols-outlined">add</span>
     </a>
-{% for c,i in transactions %}
-<a class="transaction" href="{% url 'show_transaction' i.id %}">
+{% for transaction in transactions %}
+<a class="transaction" href="{% url 'show_transaction' transaction.id %}">
     <div>
-        <p class="transaction_date">{{i.date | date:"d/m/y"}}</p>
-        <p class="transaction_name">{{ i.name }}</p>
-        <p class="transaction_category">{{c}}</p>
+        <p class="transaction_date">{{transaction.date | date:"d/m/y"}}</p>
+        <p class="transaction_name">{{ transaction.name }}</p>
+        <p class="transaction_category">{{transaction.category}}</p>
     </div>
     <div>
         <br>
-        <p class="transaction_amount">{{ i.amount }}</p>
-        <p class="current_balance">{{ "£"}}{{i.balance }}</p>
+        <p class="transaction_amount">{{ transaction.amount }}</p>
+        <p class="current_balance">{{transaction.balance }}</p>
     </div>   
 </a>
 {% endfor %}

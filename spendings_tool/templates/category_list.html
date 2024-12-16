@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}View All Categories{% endblock %}
+{% block body %}
+<div class="account_summary">
+<a class="rounded_rect" href="{% url "create_category"%}">
+    <span class="material-symbols-outlined">add</span>
+</a>
+{% for category in categories %}
+<div class="rounded_rect category">
+    <div class="category_desc">
+        <a class="category_edit" href="{% url 'transaction_list' %}?category={{category.name}}">
+            <span id="category_icon" class="material-symbols-outlined">paid</span>
+            <div class="category_name">{{category.name}}</div>
+        </a>
+    </div>
+    <a class="category_edit" href="{% url 'edit_category' category.id%}">
+        <span class="material-symbols-outlined category_edit">edit</span>
+    </a>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

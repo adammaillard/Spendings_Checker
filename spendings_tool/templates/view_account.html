@@ -1,9 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}View One Account{% endblock %}
 {% block body %}
-<a href="{% url 'account_list' %}">View All</a>
-<div class="account">
-    {{account.name}}
-    {{account.account_number}}
+<div class="view_one">
+    <div class="rounded_rect" id="view_one_body">
+        <a id="back" href="{% url 'account_list' %}">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </a>
+        <div class="transaction_body">
+            <div class="one_account_name">
+                {{account.name}}
+                <div class="account_number">
+                    {{account.number}}
+                </div>
+            </div>
+            <div class="one_transaction_amount">
+                {{account.balance}}
+            </div>
+            <a class="change_category" href="{% url 'update_account' account.id %}">Edit Account</a>
+            <hr>
+            <div class="sub_info">
+                <div>Type</div>
+                <div>{{account.type}}</div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

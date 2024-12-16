@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.urls import reverse
 from .models import Transaction, Account, Category, ModelMapping, AccountMapping
-from .forms import TransactionForm, AccountForm, ModelMappingForm
+from .forms import TransactionForm, AccountForm, ModelMappingForm, CategoryForm
 from django.contrib import messages
 from django.core.files.storage import default_storage
+import datetime
 
 def home(request):
     context = {}
@@ -16,19 +17,39 @@ def home(request):
         account_dict = {}
         account_dict["name"] = account.name
         transactions = Transaction.objects.filter(account=account.id).order_by("-date")
-        account_dict["balance"] = transactions[0].balance
-        account_dict["spendings"] = 0
+        if len(transactions) == 0:
+            balance = 0
+        else:
+            balance = transactions[0].balance
+        spendings = 0
         for transaction in transactions:
-            account_dict["spendings"] += transaction.amount
-        total_balance += account_dict["balance"]
-        account_dict["balance"] = account.currency + str(account_dict["balance"])
+            spendings += transaction.amount
+        total_balance += balance
         account_dict["number"] = account.account_number
         account_dict["id"] = account.id
+
+        if spendings > 0:
+            spendings = "+ " + account.currency + str(spendings)
+        elif spendings == 0:
+            spendings = account.currency + str(spendings)
+        else:
+            spendings = "- " + account.currency + str(abs(spendings))
+
+        account_dict["spendings"] = spendings
+
+        if balance >= 0:
+            balance = account.currency + str(balance)
+        else:
+            balance = "- " + account.currency + str(abs(balance))
+        account_dict["balance"] = balance
         accounts_list.append(account_dict)
 
-    
+    if total_balance >= 0:
+        total_balance = "£" + str(total_balance)
+    else:
+        total_balance = "- " + "£" + str(abs(total_balance))
     context["accounts"] = accounts_list
-    context["total_balance"] = "£" + str(total_balance)
+    context["total_balance"] = total_balance
 
     return render(request, "home.html", context)
 
@@ -73,13 +94,19 @@ def import_data(request):
 
         context["to_map"] = to_map
 
+        messages.info(request, "Some Headers in the CSV currently have no mappings.")
+        messages.info(request, "Select the corresponding mappings")
+
         return render(request, "import_data.html", context)
 
 def add_mappings(request):
     post = request.POST
     for header in post:
         if header != "csrfmiddlewaretoken":
-            ModelMapping.objects.create(name=header.lower(),field=post.get(header))
+            try:
+                ModelMapping.objects.create(name=header.lower(),field=post.get(header))
+            except:
+                pass
 
 def check_mappings(file_name):
     file_data = default_storage.open("files/" + file_name + ".csv").read().decode("utf-8")
@@ -116,7 +143,8 @@ def add_account_mapping(request, account_number):
     if request.method == 'POST':
         account = Account.objects.get(id=request.POST.get("account"))
         AccountMapping.objects.create(account_number=account_number,account=account)
-        return redirect(import_data)
+        files = default_storage.listdir("files")[1]
+        return redirect(process_data, files[0].removesuffix('.csv'))
 
 # Follow up method to import_data()
 # When the user inputs which collum is what field try to create transactions using the csv file
@@ -150,17 +178,19 @@ def process_data(request, file_name):
             if account == None:
                 return redirect(add_account_mapping, data["account"])
             data["account"] = account
-            data["amount"] = 0
 
             form = TransactionForm(data)
             if form.is_valid():
                 form.save()
             else:
-                output = ""
-                for field in form:
-                    output += field.errors
-                return HttpResponse(output)
-    return redirect(reverse("import_data"))
+                default_storage.delete("files/" + file_name + ".csv")
+                messages.error(request, form.errors)
+                return redirect(transaction_list)
+    files = default_storage.listdir("files")
+    for file in files[1]:
+        default_storage.delete("files/" + file)
+    messages.info(request,"Transactions added successfully")
+    return redirect(reverse("transaction_list"))
 
 def model_mappings_list(request):
     context = {}
@@ -182,6 +212,7 @@ def model_mappings_edit(request,id):
         return redirect("mappings_list")
     
     context["form"] = form
+    context["submit"] = "Edit"
 
     return render(request, "update.html", context)
 
@@ -190,15 +221,42 @@ def model_mappings_edit(request,id):
 def transaction_list(request):
 
     context = {}
-    
     def get_category(obj):
         if obj.category == None:
             return "-"
         else:
-            return Category.objects.get(id=obj.category)
+            return Category.objects.get(id=obj.category.id).name
 
-    transactions = Transaction.objects.all().order_by('-date')
-    context["transactions"] = zip(map(get_category, transactions),transactions)
+    category = request.GET.get("category")
+    if category == None:
+        transactions = Transaction.objects.all().order_by('-date')
+        context["categories"] = Category.objects.all()
+    else:
+        category_id = get_object_or_404(Category,name=category).id
+        transactions = Transaction.objects.filter(category=category_id).order_by('-date')
+
+    transactions_list = []
+    for transaction in transactions:
+        dict = {}
+        dict["id"] = transaction.id
+        dict["name"] = transaction.name
+        dict["date"] = transaction.date
+        dict["category"] = get_category(transaction)
+        if transaction.amount > 0:
+            amount = "+ " + transaction.account.currency + str(transaction.amount)
+        elif transaction.amount == 0:
+            amount = transaction.account.currency + str(transaction.amount)
+        else:
+            amount = "- " + transaction.account.currency + str(abs(transaction.amount))
+        dict["amount"] = amount
+        if transaction.balance >= 0:
+            balance = transaction.account.currency + str(transaction.balance)
+        else:
+            balance = "- " + transaction.account.currency + str(abs(transaction.balance))
+        dict["balance"] = balance
+        transactions_list.append(dict)
+     
+    context["transactions"] = transactions_list
 
     return render(request, "transactions_list_view.html", context)
 
@@ -207,7 +265,19 @@ def show_transaction(request, id):
 
     context = {}
 
-    context["transaction"] = Transaction.objects.get(id=id)
+    transaction = Transaction.objects.get(id=id)
+    account = transaction.account
+    if transaction.amount > 0:
+        context["amount"] = "+ " + account.currency + str(transaction.amount)
+    elif transaction.amount == 0:
+        context["amount"] = account.currency + str(transaction.amount)
+    else:
+        context["amount"] = "- " + account.currency + str(abs(transaction.amount))
+    
+    context["transaction"] = transaction
+    category = transaction.category
+    if category != None: category = category.name
+    context["category"] = category
 
     return render(request, "view_transaction.html", context)
 
@@ -225,8 +295,20 @@ def update_transaction(request, id):
         return redirect(show_transaction, id=id)
     
     context["form"] = form
+    context["submit"] = "Update"
 
     return render(request, "update.html", context)
+
+def delete_transaction(request, id):
+
+    context = {}
+
+    transaction = get_object_or_404(Transaction, id=id)
+    transaction.delete()
+
+    messages.info(request, "Transaction Successfully Deleted")
+
+    return redirect(transaction_list)
 
 def create_transaction(request):
     context = {}
@@ -237,6 +319,8 @@ def create_transaction(request):
         return redirect(show_transaction, id=transaction.id )
     
     context["form"] = form
+
+    context["submit"] = "Create"
 
     return render(request, "update.html", context)
 
@@ -255,11 +339,29 @@ def accounts_list(request):
         account_dict["id"] = account.id
         account_dict["number"] = account.account_number
         transactions = Transaction.objects.filter(account=account.id).order_by("-date")
-        account_dict["balance"] = transactions[0].balance
-        account_dict["spendings"] = 0
+        if len(transactions) == 0:
+            balance = 0
+        else:
+            balance = transactions[0].balance
+        spendings = 0
+
         for transaction in transactions:
-            account_dict["spendings"] += transaction.amount
-        account_dict["balance"] = account.currency + str(account_dict["balance"])
+            spendings += transaction.amount
+        
+        if spendings > 0:
+            spendings = "+ " + account.currency + str(spendings)
+        elif spendings == 0:
+            spendings = account.currency + str(spendings)
+        else:
+            spendings = "- " + account.currency + str(abs(spendings))
+
+        account_dict["spendings"] = spendings
+
+        if balance >= 0:
+            balance = account.currency + str(balance)
+        else:
+            balance = "- " + account.currency + str(abs(balance))
+        account_dict["balance"] = balance
         context["accounts"].append(account_dict)
 
     return render(request, "accounts_list_view.html", context)
@@ -269,7 +371,25 @@ def show_account(request, id):
 
     context = {}
 
-    context["account"] = Account.objects.get(id=id)
+    account = Account.objects.get(id=id)
+    transactions = Transaction.objects.filter(account=account).order_by("-date")
+
+    account_dict = {}
+    account_dict["name"] = account.name
+    if len(transactions) == 0:
+        balance = 0
+    else:
+        balance = transactions[0].balance
+    if balance >= 0:
+        balance= account.currency + str(balance)
+    else:
+        balance = "- " + account.currency + str(abs(balance))
+    account_dict["balance"] = balance
+    account_dict["type"] = account.get_account_type_display
+    account_dict["number"] = account.account_number
+    account_dict["id"] = account.id
+
+    context["account"] = account_dict
 
     return render(request, "view_account.html", context)
 
@@ -282,6 +402,92 @@ def create_account(request):
         return redirect(show_account, id=account.id )
     
     context["form"] = form
+    context["submit"] = "Create"
 
     return render(request, "update.html", context)
+
+def update_account(request, id):
+
+    context = {}
+
+    account = get_object_or_404(Account, id=id)
+
+    form = AccountForm(request.POST or None, instance=account)
+
+    if form.is_valid():
+        form.save()
+        return redirect(show_account, id=id)
     
+    context["form"] = form
+    context["submit"] = "Update"
+
+    return render(request, "update.html", context)
+
+def show_categories(request):
+
+    context = {}
+
+    context["categories"] = Category.objects.all()
+
+    return render(request, "category_list.html", context)
+
+def create_category(request):
+    context = {}
+    form = CategoryForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        return redirect(show_categories)
+    
+    context["form"] = form
+    context["submit"] = "Create"
+
+    return render(request, "update.html", context)
+
+def edit_category(request, id):
+    context = {}
+    category = Category.objects.get(id=id)
+    form = CategoryForm(request.POST or None, instance=category)
+
+    if form.is_valid():
+        form.save()
+        return redirect(show_categories)
+    
+    context["form"] = form
+    context["submit"] = "Edit"
+
+    return render(request, "update.html", context)
+
+def edit_transaction_category(request,id):
+
+    if request.method == 'GET':
+        context = {}
+
+        transaction = Transaction.objects.get(id=id)
+        account = transaction.account
+        if transaction.amount > 0:
+            context["amount"] = "+ " + account.currency + str(transaction.amount)
+        elif transaction.amount == 0:
+            context["amount"] = account.currency + str(transaction.amount)
+        else:
+            context["amount"] = "- " + account.currency + str(abs(transaction.amount))
+    
+        context["transaction"] = transaction
+
+        context["categories"] = Category.objects.all()
+
+        return render(request, "edit_transaction_category.html", context)
+    elif request.method == 'POST':
+
+        transaction = get_object_or_404(Transaction, id=id)
+
+        if request.POST["category"] == "None":
+            category = None
+        else:
+            category = Category.objects.get(id=request.POST["category"])
+
+        transaction.category = category
+
+        transaction.save()
+
+        return redirect(show_transaction, id)

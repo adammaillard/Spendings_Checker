@@ -5,9 +5,7 @@
     {% csrf_token%}
 
     <input type="file" name="csv_file" required="True"><br>
-    {% for i in messages%}
-    {{i}}<br>
-    {% endfor %}
-    <input type="submit" value=Update>
+
+    <input type="submit" value=Upload>
 </form>
 {% endblock %}

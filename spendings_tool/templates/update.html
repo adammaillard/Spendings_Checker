@@ -2,12 +2,10 @@
 {% block title %}Update{% endblock %}
 {% block body %}
 <form method="POST" enctype="multipart/form-data">
-    <!--Security token -->
     {% csrf_token%}
     
-    <!--Using the formset-->
-    {{ form.as_p}}
+    {{ form }}
 
-    <input type="submit" value=Update>
+    <input class="form" type="submit" value={{submit}}>
 </form>
 {% endblock %}

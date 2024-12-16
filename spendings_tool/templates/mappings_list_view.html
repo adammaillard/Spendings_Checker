@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}View All Model Mappings{% endblock %}
 {% block body %}
-<ul>
-    {% for message in messages %}
-    <li>{{message}}</li>
-    {% endfor %}
-</ul>
 {% for i in mappings %}
 <div class="mapping">
     <p>

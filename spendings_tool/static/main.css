@@ -12,17 +12,20 @@ nav {
     background-color: #ffffff;
     color: black;
     border-bottom: 2px solid #c7c7c7;
+    justify-content: center;
+    display: flex;
 }
 
 nav ul {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 20px;
+    width: 75vw;
+    min-width: 700px;
 }
 
 nav li {
-    margin: 0 20px;
     list-style: none;
     float: left
 }
@@ -76,9 +79,9 @@ h1 {
 }
 
 hr {
-    width: 50%;
-    height: 2px;
-    margin: 0px auto 20px auto;
+    width: 100%;
+    height: 1px;
+    margin: 20px auto 20px auto;
     border: 0px;
     background-color: #c7c7c7;
 }
@@ -97,7 +100,9 @@ input, select {
     box-sizing: border-box;
     justify-content: center;
     text-align: center;
+    background-color: #f2f2f2;
 }
+
 form {
     display: flex;
     justify-content: center;
@@ -108,7 +113,15 @@ button {
     margin: auto;
 }
 
-button:hover, select:hover, input:hover {
+button:hover, select:hover {
+    cursor: pointer;
+}
+
+input:hover {
+    cursor: text;
+}
+
+input:hover.form {
     cursor: pointer;
 }
 
@@ -117,8 +130,8 @@ button:hover, select:hover, input:hover {
     display: flex;
     justify-content: space-between;
     margin:auto;
+    margin-bottom: -1px;
     border: 1px solid#c7c7c7;
-    border-bottom: 0px;
     background-color: white;
     text-decoration: none;
     color: black;
@@ -148,9 +161,12 @@ button:hover, select:hover, input:hover {
     margin-top: 15px;
 }
 
-.current_balance {
+.current_balance, .transaction_category{
     font-size: 14px;
     color: darkgray;
+}
+
+.current_balance {
     text-align: right;
 }
 
@@ -191,8 +207,6 @@ button:hover, select:hover, input:hover {
 
 #sort_options {
     display: none;
-    width: 0;
-    flex-grow: 1;
 }
 
 #show_menu {
@@ -209,11 +223,11 @@ button:hover, select:hover, input:hover {
 
 .material-symbols-outlined {
     margin: auto;
+    text-decoration: none;
 }
 
 #sort_options.show {
     display: block;
-    width: auto;
 }
 
 .add {
@@ -221,12 +235,256 @@ button:hover, select:hover, input:hover {
     margin-bottom: 35px;
 }
 
-.view_one_body {
-    width:75vw;
-    margin: 20px;
+#view_one_body {
+    width: 75vw;
+    margin: 35px;
 }
 
 .view_one {
     display: flex;
     justify-content: center;
+}
+
+a {
+    color: black;
+}
+
+.transaction_body {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 75vw;
+}
+
+#back {
+    display: inline-block;
+}
+
+.one_transaction_amount {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+#category_icon {
+    font-size: 50px;
+}
+
+.category {
+    display: flex;
+    justify-content: space-between;
+}
+
+.category_desc {
+    display: flex;
+}
+
+.category_name {
+    margin: auto;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.change_category {
+    font-size: 14px;
+    color: darkgray;
+    text-decoration: none;
+}
+
+.category_edit {
+    margin: auto;
+    margin-right: 0px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.sub_info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.one_account_name {
+    display: flex;
+    justify-content: space-between;
+}
+
+form {
+    background-color: white;
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+    padding: 15px;
+    width: 50vw;
+    margin: 25px auto;
+}
+
+form div {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-direction: column;
+}
+
+form div label {
+    text-align: center;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input:focus, select:focus {
+    outline: none;
+}
+
+select {
+    appearance: none;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 12px 20px;
+    margin: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    text-align-last: center;
+}
+
+.form {
+    width: 25vw;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.search_box {
+    background-color: white;
+}
+
+.message {
+    width: 50vw;
+    margin: auto;
+    margin-top: 15px;
+    font-size: 14px;
+    color: darkgray;
+    justify-content: center;
+}
+
+.message * {
+    list-style-type: none;
+    text-align: center;
+}
+
+.errorlist {
+    list-style-type: none;
+    text-align: center;
+    font-size: 14px;
+    color: darkred;
+}
+
+.category_radio {
+    display: none;
+}
+
+.category_select:hover {
+    cursor: pointer;
+}
+
+.category_radio:checked + .category_select {
+    border: 1px solid green;
+}
+
+.category_select {
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+    padding: 25px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.category_select .category_name, .category_select .material-symbols-outlined{
+    margin: 0px;
+    width: auto;
+}
+
+.category_form {
+    width:50vw;
+}
+
+.scroll label {
+    width: 20vw;
+    flex-shrink: 0;
+}
+
+.scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    justify-content: space-between;
+}
+
+.scroll::-webkit-scrollbar {
+    display: none;
+}
+  
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: white;
+    border-radius: 5px;
+    color: white;
+}
+
+.container:hover input ~ .checkmark {
+    background-color:aliceblue;
+}
+
+.container input:checked ~ .checkmark {
+    background-color:cornflowerblue;
+}
+
+.checkmark:after {
+    content: "";
+}
+
+.container input:checked ~ .checkmark:after {
+    content: "check";
+}
+
+#category_sort {
+    padding: 15px;
+    padding-top: 0px;
+}
+
+.centered {
+    text-align: center;
+    padding: 10px;
+}
+
+.description {
+    font-size: 14px;
+    color: darkgray;
+    padding-left: 10px;
 }

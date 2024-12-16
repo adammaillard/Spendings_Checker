@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Edit Transaction Category{% endblock %}
+{% block body %}
+<div class="view_one">
+    <div class="rounded_rect" id="view_one_body">
+        <a id="back" href="{% url 'show_transaction' transaction.id %}">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </a>
+        <div class="transaction_body">
+            <div class="one_transaction_name">
+                {{transaction.name}}
+            </div>
+            <div class="one_transaction_amount">
+                {{amount}}
+            </div>
+            <hr>
+            <div class="transaction_name">Select New Category</div>
+            <form class="category_form" method="POST" enctype="multipart/form-data">
+                {% csrf_token%}
+                <div class="scroll">
+                    <label>
+                        <input type="radio" class="category_radio" name="category" value=None>
+                        <div class="category_select">
+                            <span id="category_icon" class="material-symbols-outlined">paid</span>
+                            <div class="category_name">None</div>
+                        </div>
+                    </label>
+                {% for category in categories %}
+                <label>
+                    <input type="radio" class="category_radio" name="category" value={{category.id}}>
+                    <div class="category_select">
+                        <span id="category_icon" class="material-symbols-outlined">paid</span>
+                        <div class="category_name">{{category.name}}</div>
+                    </div>
+                </label>
+                {% endfor %}
+                </div>
+                <input class="form" type="submit" value=Update>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

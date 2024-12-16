@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Import{% endblock %}
 {% block body %}
-<div>
-    <p>Some Headers in the CSV currently have no mappings.</p>
-    <p>Please Select the corresponding fields</p>
-</div>
 <form action="{% url 'process_data' file_name %}" method="POST" enctype="multipart/form-data">
 {% csrf_token%}
 {% for i in to_map %}
@@ -16,7 +12,7 @@
         <option value="amount">Transaction Amount</option>
         <option value="amount_neg">Transaction Amount Negated (Only applies if CSV has different fields for debit and credit)</option>
         <option value="balance">Account Balance</option>
-        <option value="skip" selected>Option Not Required</option>
+        <option value="skip" selected>Ignore Column Header</option>
     </select><br>
 {% endfor %}
 <input type="submit" value="Submit">

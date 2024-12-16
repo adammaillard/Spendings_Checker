@@ -2,14 +2,43 @@
 {% block title %}View One Transaction{% endblock %}
 {% block body %}
 <div class="view_one">
-    <div class="rounded_rect view_one_body">
-        {{transaction.name}}
-        {{transaction.amount}}
-        {{transaction.date}}
-        Account:<br>
-        {{transaction.account.name}}<br>
-        <a href="{% url 'update_transaction' transaction.id %}">Edit Transaction</a>
-        <a href="{% url 'transaction_list' %}">View All</a>
+    <div class="rounded_rect" id="view_one_body">
+        <a id="back" href="{% url 'transaction_list' %}">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </a>
+        <div class="transaction_body">
+            <div class="one_transaction_name">
+                {{transaction.name}}
+            </div>
+            <div class="one_transaction_amount">
+                {{amount}}
+            </div>
+            <a class="change_category" href="{% url 'update_transaction' transaction.id %}">Edit Transaction</a>
+            <hr>
+            <div class="category">
+                <div class="category_desc">
+                    <span id="category_icon" class="material-symbols-outlined">paid</span>
+                    <div class="category_name">{{category}}</div>
+                </div>
+                <a class="category_edit" href="{% url 'edit_transaction_category' transaction.id %}">
+                    <span class="material-symbols-outlined category_edit">edit</span>
+                </a>
+            </div>
+            <hr>
+            <div class="sub_info">
+                <div>Date</div>
+                <div>{{transaction.date | date:"d/m/Y"}}</div>
+            </div>
+            <br>
+            <div class="sub_info">
+                <div>Account</div>
+                <div>{{transaction.account.name}}</div>
+            </div>
+            <br>
+            <a class="change_category" href="{% url 'delete_transaction' transaction.id %}" >
+                <span class="material-symbols-outlined">delete</span>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}
