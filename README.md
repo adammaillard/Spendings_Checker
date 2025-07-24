@@ -1,7 +1,6 @@
 A simple webapp to add bank transactions to for budgeting or just general info.
 
 <h1> Features </h1>
-<h2> Implemented </h2>
 <ul>
   <li>Add spendings using a CSV file export from bank</li>
   <li>CSV files with custom ordering of fields is supported</li>
@@ -12,6 +11,8 @@ A simple webapp to add bank transactions to for budgeting or just general info.
   <li>Add / Edit Accounts</li>
   <li>Add / Sort Transactions by category</li>
 </ul>
+<img width="1680" height="924" alt="Screenshot 2025-07-24 at 13 11 41" src="https://github.com/user-attachments/assets/35bee179-918f-4ff1-b951-c4ec4d0e650d" />
+<img width="1676" height="940" alt="Screenshot 2025-07-24 at 13 12 01" src="https://github.com/user-attachments/assets/bca35d15-642e-41ae-879d-d990ef0a7941" />
 
 <h1> How to Run </h1>
 Make sure to install python 3.12 and django 5.1.1.
